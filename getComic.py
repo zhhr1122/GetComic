@@ -7,6 +7,8 @@ import json
 #encoding = gbk  
  
 url = "http://www.nettruyen.com/truyen-tranh/lac-vao-the-gioi-game"
+#url = "http://www.nettruyen.com/truyen-tranh/tay-du-duong-tang-hang-ma"
+
 
 
 def getNettruyenComic(chapter_url):
@@ -31,25 +33,31 @@ def getNettruyenComicIndex(page_url):
 	try:
 		response  = requests.get(page_url)
 		soup = BeautifulSoup(response.text,"html.parser")
-		title_temp = soup.select('.other-name')[0].get_text()
-		title = title_temp.encode('GBK', 'ignore');
+		
+		listinfo = soup.select('.list-info')[0].select('.col-xs-8')
+		
+		title = listinfo[0].get_text().encode('GBK', 'ignore')
 		#print title
 		
 		describe_temp = soup.select('.detail-content')[0].p.get_text()
 		describe = describe_temp.encode('GBK', 'ignore');
 		#print describe
 		
-		author_temp = soup.select('.col-xs-8')[2].get_text()
-		author = author_temp.encode('GBK', 'ignore');
+		author = listinfo[1].get_text().encode('GBK', 'ignore');
 		#print author
 		
 		cover = soup.select('.col-image')[0].img['src']
 		#print cover
+		if len(listinfo) == 4:
+			status = ''
+			tags = listinfo[2].select('a')
+			hot = listinfo[3].get_text().encode('GBK', 'ignore')
+		else:
+			status = listinfo[2].get_text().encode('GBK', 'ignore')
+			tags = listinfo[3].select('a')
+			hot = listinfo[4].get_text().encode('GBK', 'ignore')
+			
 		
-		status_temp = soup.select('.col-xs-8')[3].get_text()
-		status = status_temp.encode('GBK', 'ignore');
-		
-		tags = soup.select('.col-xs-8')[4].select('a')
 		for tag in tags:
 			Tag_List.append(tag.get_text().encode('GBK', 'ignore'))
 		#print Tag_List
@@ -58,13 +66,14 @@ def getNettruyenComicIndex(page_url):
 		createtimes = soup.select('.text-center' '.col-xs-4' '.small')
 		
 		chapters = soup.select('.chapter')
+		print title +' has ' + str(len(chapters)) + ' chapters'
 		for i in range(0, len(chapters)):
 			chapter_url = chapters[i].a['href']
-			#print chapter_url + " is loading"
-			#comic_chapter = {'chap_url':chapter_url,'chap_imgs':getNettruyenComic(chapter_url),'createtime':''}
+			print "Chapter "+str(i+1) + " is loaded"
+			#comic_chapter = {'chap_url':chapter_url,'chap_imgs':getNettruyenComic(chapter_url),'createtime':createtimes[i].get_text()}
 			comic_chapter = {'chap_url':chapter_url,'chap_imgs':'','createtime':createtimes[i].get_text()}
 			Chapters_List.append(comic_chapter)
-		info = {'title':title,'describe':describe,'chapter':Chapters_List,'author':author,'cover':cover,'status':status,'tag':Tag_List}
+		info = {'title':title,'describe':describe,'chapter':Chapters_List,'author':author,'cover':cover,'status':status,'tag':Tag_List,"hot":hot}
 		print json.dumps(info,sort_keys=True,indent =4,separators=(',', ': '),encoding="gbk",ensure_ascii=True )
 	except Exception as e:
 		print('Error',e)
