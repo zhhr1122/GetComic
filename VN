@@ -1,0 +1,26 @@
+#coding:utf-8
+#!/usr/bin/python
+
+import requests
+import threading
+from bs4 import BeautifulSoup
+import json
+from Tkinter import *
+
+url = "http://www.nettruyen.com/truyen-tranh/tay-du-duong-tang-hang-ma"
+
+
+def getNettruyenComicIndex():
+    try:
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, "html.parser")
+        title = soup.select('.title-detail')[0].get_text().encode('UTF-8', 'ignore')
+
+        info = {'title': title, 'describe': '中文', 'chapter':  '中文', 'author':  '中文', 'cover':  '中文',
+                'status':  '中文', 'tag':  '中文', "hot":  '中文'}
+        json_info = json.dumps(info, sort_keys=True, indent=4, separators=(',', ': '), encoding="utf-8", ensure_ascii=False)
+        print(json_info)
+    except Exception as e:
+        print('Error', e)
+
+getNettruyenComicIndex()
