@@ -70,13 +70,10 @@ def get_url(code=0,ips=[]):
         get_url(code,ips)
     else:
         date = datetime.datetime.now().strftime('%H:%M:%S')
-        print u"第%s次 [%s] [%s]：投票%s (剩余可用代理IP数：%s)" % (code,date,ip,hz_r.text,len(ips))
+
 ips = []
-for i in xrange(6000):
-    # 每隔1000次重新获取一次最新的代理IP，每次可获取最新的100个代理IP
-    if i % 1000 == 0:
-        ips.extend(get_ip())
-    # 启用线程，隔1秒产生一个线程，可控制时间加快投票速度 ,time.sleep的最小单位是毫秒
-    t1 = threading.Thread(target=get_url,args=(i,ips))
-    t1.start()
-    time.sleep(1)
+for i in xrange(6):
+    ips.extend(get_ip())
+
+t1 = threading.Thread(target=get_url,args=(0,ips))
+#t1.start()

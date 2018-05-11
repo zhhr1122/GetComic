@@ -6,14 +6,31 @@ from Tkinter import *
 
 import requests
 from bs4 import BeautifulSoup
-
 import MangagoUtils
+from random import choice
+import switchip
+
+uas = [
+    "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:17.0; Baiduspider-ads) Gecko/17.0 Firefox/17.0",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9b4) Gecko/2008030317 Firefox/3.0b4",
+    "Mozilla/5.0 (Windows; U; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727; BIDUBrowser 7.6)",
+    "Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko",
+    "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0",
+    "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.99 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 6.3; Win64; x64; Trident/7.0; Touch; LCJB; rv:11.0) like Gecko",
+    ]
+headers2 = {"Accept": "text/html,application/xhtml+xml,application/xml;",
+            "Accept-Encoding": "gzip, deflate, sdch",
+            "Accept-Language": "zh-CN,zh;q=0.8,en;q=0.6",
+            "Referer": "",
+            "User-Agent": choice(uas),
+            }
 
 
-def getNettruyenComic(chapter_url):
+def getNettruyenComic(chapter_url,mProxies):
     imgList = []
     try:
-        response = requests.get(chapter_url)
+        response = requests.get(chapter_url,headers=headers2,proxies=mProxies)
         soup = BeautifulSoup(response.text, "html.parser")
         # pages = soup.find_all('div','page-chapter') same as bottom
         pages = soup.select('.page-chapter')
@@ -26,6 +43,7 @@ def getNettruyenComic(chapter_url):
 
 
 def getNettruyenComicIndex(app,index_url):
+    mProxies = switchip.get_ip()
     Chapters_List = []
     Tag_List = []
     try:
@@ -33,7 +51,8 @@ def getNettruyenComicIndex(app,index_url):
         print(file_name)
         if MangagoUtils.isSaved(app,file_name):
             return
-        response = requests.get(index_url)
+        response = requests.get(index_url,proxies=mProxies)
+        print(response.text)
         soup = BeautifulSoup(response.text, "html.parser")
         listinfo = soup.select('.list-info')[0].select('.col-xs-8')
 
@@ -81,7 +100,7 @@ def getNettruyenComicIndex(app,index_url):
             chapter_title = chapters[i].a.get_text().encode('UTF-8', 'ignore')
             print "Chapter " + str(i + 1) + " is loaded"
             app.t_url.insert(END, title+" Chapter " + str(i + 1) + " is loaded\n")
-            comic_chapter = {'chap_url': chapter_url.encode('UTF-8', 'ignore'), 'chapter_title':chapter_title,'chap_imgs': getNettruyenComic(chapter_url)}
+            comic_chapter = {'chap_url': chapter_url.encode('UTF-8', 'ignore'), 'chapter_title':chapter_title,'chap_imgs': getNettruyenComic(chapter_url,mProxies)}
             #comic_chapter = {'chap_url':chapter_url.encode('UTF-8', 'ignore'),'chap_imgs':''}
             Chapters_List.append(comic_chapter)
         info = {'title': title, 'describe': describe, 'chapter': Chapters_List, 'author': author, 'cover': cover,'status': status, 'tag': Tag_List, "hot": hot_str.encode('UTF-8', 'ignore'),'url':index_url,'localId':80}
@@ -91,7 +110,8 @@ def getNettruyenComicIndex(app,index_url):
         MangagoUtils.SaveToJson(app,file_name, info)
     except Exception as e:
         print('Error', e)
-        app.t_url.insert(END, str(e) + "\n")
+        getNettruyenComicIndex(app, index_url)
+        app.t_url.insert(END, 'is reloading' + "\n")
 
 
 
