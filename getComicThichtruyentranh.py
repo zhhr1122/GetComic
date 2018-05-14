@@ -36,7 +36,7 @@ def getComicThichtruyentranhIndex(app,index_url):
         describe = soup.select('.ulpro_line')[0].select('p')[1].get_text().encode('UTF-8', 'ignore')
         infos = soup.select('.ullist_item')[0].select('li')
         author = infos[0].select('.item2')[0].get_text().strip().split(':')[1].encode('UTF-8', 'ignore')
-        hot = infos[4].select('.item2')[0].get_text().strip().split(':')[1].encode('UTF-8', 'ignore')
+        hot = infos[4].select('.item2')[0].get_text().strip().split(':')[1].strip().encode('UTF-8', 'ignore')
         status_str = infos[3].select('.item2')[0].get_text().strip().split(':')[1]
         print(status_str)
         if cmp(' Còn Tiếp',status_str.encode('UTF-8', 'ignore')) == 0:
@@ -54,14 +54,14 @@ def getComicThichtruyentranhIndex(app,index_url):
             print('Error', e)
 
         cover = soup.select('.divthum2')[0].select('img')[0]['src'].encode('UTF-8', 'ignore')
-        app.t_url.insert(END, title + ' has ' + str(len(chapters)) + ' chapters\n')
+        app.t_url.insert(1.0, title + ' has ' + str(len(chapters)) + ' chapters\n')
         i=0
         for chapter in chapters:
             i += 1
             #print base_url+chapter['href']
             chapter_url = base_url + chapter['href']
             chapter_title = chapter['title']
-            app.t_url.insert(END, title + " Chapter " + str(i) + " is loaded\n")
+            app.t_url.insert(1.0, title + " Chapter " + str(i) + " is loaded\n")
             comic_chapter = {'chap_url': chapter_url.encode('UTF-8', 'ignore'), 'chapter_title': chapter_title.encode('UTF-8', 'ignore'),
                              'chap_imgs': getComicThichtruyentranh(chapter_url)}
             Chapters_List.append(comic_chapter)
@@ -77,7 +77,7 @@ def getComicThichtruyentranhIndex(app,index_url):
                     i += 1
                     chapter_url = base_url + chapter['href']
                     chapter_title = chapter['title']
-                    app.t_url.insert(END, title + " Chapter " + str(i) + " is loaded\n")
+                    app.t_url.insert(1.0, title + " Chapter " + str(i) + " is loaded\n")
                     comic_chapter = {'chap_url': chapter_url.encode('UTF-8', 'ignore'), 'chapter_title': chapter_title.encode('UTF-8', 'ignore'),
                                      'chap_imgs': getComicThichtruyentranh(chapter_url)}
                     Chapters_List.append(comic_chapter)

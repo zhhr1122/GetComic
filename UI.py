@@ -52,7 +52,6 @@ class App(object):
 
     def getText(self):
         start(self)
-        self.t_url.delete(1.0, END)
         self.t_url.insert(1.0, self.var.get()+'\n')
 
 
@@ -63,7 +62,7 @@ def start(app):
     index_url = app.var.get()
     scource = index_url.split('/')[2]
     print scource
-    app.t_url.insert(END, 'the comic is from' + scource)
+    app.t_url.insert(1.0, 'the comic is from' + scource)
     if cmp(scource, 'www.nettruyen.com') == 0:
         download_thread = threading.Thread(target=getComic.getNettruyenComicIndex, args=(app, index_url,))
         download_thread.start()
@@ -74,10 +73,10 @@ def start(app):
         download_thread = threading.Thread(target=getComicThichtruyentranh.getComicThichtruyentranhIndex, args=(app, index_url,))
         download_thread.start()
     else:
-        app.t_url.insert(END, '无匹配规则')
+        app.t_url.insert(1.0, '无匹配规则')
 
 root = Tk()
-root.title('Mangago漫画爬取器1.2.1')
+root.title('Mangago漫画爬取器1.2.2')
 root.geometry('960x640')
 root.resizable(width=False, height=False) #宽不可变, 高可变,默认为True
 

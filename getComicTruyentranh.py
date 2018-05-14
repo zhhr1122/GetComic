@@ -73,11 +73,11 @@ def getComicTruyentranhIndex(app,index_url):
             #print(tag['title'])
         chapters = soup.select('.mCustomScrollbar')[0].select('p')
         print title + ' has ' + str(len(chapters)) + ' chapters'
-        app.t_url.insert(END, title + ' has ' + str(len(chapters)) + ' chapters\n')
+        app.t_url.insert(1.0, title + ' has ' + str(len(chapters)) + ' chapters\n')
         for i in range(0, len(chapters)):
             try:
                 print "Chapter " + str(i + 1) + " is loaded"
-                app.t_url.insert(END, title + " Chapter " + str(i + 1) + " is loaded\n")
+                app.t_url.insert(1.0, title + " Chapter " + str(i + 1) + " is loaded\n")
                 chapter_url = chapters[i].a['href'].encode('UTF-8', 'ignore')
                 chapter_title = chapters[i].a['title'].encode('UTF-8', 'ignore')
                 comic_chapter = {'chap_url': chapter_url, 'chapter_title': chapter_title,
@@ -95,4 +95,4 @@ def getComicTruyentranhIndex(app,index_url):
         MangagoUtils.SaveToJson(app, file_name, info)
     except Exception as e:
         print('Error', e)
-        app.t_url.insert(END, str(e) + "\n")
+        app.t_url.insert(1.0, str(e) + "\n")

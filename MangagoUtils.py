@@ -12,7 +12,7 @@ def SaveToJson(app,title, datas):
     fl.write(json.dumps(datas, sort_keys=True, indent=4, separators=(',', ': '), encoding="utf-8", ensure_ascii=False))
     fl.close()
     print postFiles('C:/json/' + title + '.json')
-    app.t_url1.insert(END, title + ' save success ' + "\n")
+    app.t_url1.insert(1.0, title + ' save success ' + "\n")
     print title + 'save success'
 
 
@@ -26,13 +26,13 @@ def postFiles(file):
     response = requests.post(test_url, data=data, files=files)
     return response
 
-print postFiles('C:/json/co-vo-nong-bong.json')
+#print postFiles('C:/json/co-vo-nong-bong.json')
 
 def isSaved(app,title):
     jsonfiles = 'c:/json/'+ title+'.json'
     print(jsonfiles)
     if os.access(jsonfiles, os.F_OK):
-        app.t_url.insert(END, title + ' is exist \n')
+        app.t_url.insert(1.0, title + ' is exist \n')
         return True
     else:
         print 'is not Exists'
