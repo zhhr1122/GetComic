@@ -15,10 +15,28 @@ def SaveToJson(app,title, datas):
     app.t_url1.insert(1.0, title + ' save success ' + "\n")
     print title + 'save success'
 
+def SaveToChapterJson(app,title, datas):
+    fl = open('C:/json/' + title + '.json', 'w')
+    fl.write(json.dumps(datas, sort_keys=True, indent=4, separators=(',', ': '), encoding="utf-8", ensure_ascii=False))
+    fl.close()
+    print postChapterFiles('C:/json/' + title.encode('UTF-8', 'ignore') + '.json')
+    app.t_url1.insert(1.0, title + ' save success ' + "\n")
+    print title + 'save success'
+
 
 def postFiles(file):
     localurl = 'http://188.188.188.149:8080/mangago-bss/manga/addFile'
     test_url = 'http://222.129.17.186:18082/mangago-bss/manga/addFile'
+    data = {
+        'name': 'mangago'
+    }
+    files = {'file': open(file, 'rb')}
+    response = requests.post(test_url, data=data, files=files)
+    return response
+
+def postChapterFiles(file):
+    localurl = 'http://188.188.188.149:8080/mangago-bss/manga/addchapter'
+    test_url = 'http://222.129.17.186:18082/mangago-bss/manga/addchapter'
     data = {
         'name': 'mangago'
     }
