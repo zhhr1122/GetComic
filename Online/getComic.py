@@ -20,11 +20,10 @@ def isNeedUpdate(data):
         if len(chapters) > count:
             print 'id='+str(data['id'])+' 需要更新'
             for i in range(0, len(chapters)-count):
-                chapter_url = chapters[i].a['href']
-                chapter_title = chapters[i].a.get_text().encode('UTF-8', 'ignore')
-                #执行更新方法
-                getNettruyenComicChapter(index_url,chapter_url,len(chapters)-i)
-                print 'id='+str(data['id'])+'更新章节'+ str(len(chapters)-i) + '完成 标题为：' + chapter_title
+                chapter_url = chapters[len(chapters)-count-i-1].a['href']
+                chapter_title = chapters[len(chapters)-count-i-1].a.get_text().encode('UTF-8', 'ignore')
+                getNettruyenComicChapter(index_url,chapter_url,count+i+1)
+                print 'id='+str(data['id'])+'更新章节'+ str(count+i+1) + '完成 标题为：' + chapter_title
         else:
             print 'id='+str(data['id'])+'不需要更新'
     except Exception as e:

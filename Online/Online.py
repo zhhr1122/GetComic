@@ -20,3 +20,5 @@ def getComicList(localid):
     for data in datas:
        getComic.isNeedUpdate(data)
     print '全部更新完成'
+
+getComicList(80)
