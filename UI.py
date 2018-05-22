@@ -25,7 +25,7 @@ class App(object):
         self.com = Button(self.f_top, text='获取漫画', command=self.getText, height=2)
         self.com.pack(side=RIGHT)
 
-        self.t_lable1 = Label(master, text='                               请在下方黏贴需要抓取的漫画章节url                                               漫画标题                        漫画章节数',height=2)
+        self.t_lable1 = Label(master, text='                               请在下方黏贴需要抓取的漫画章节url                                               漫画URL                        漫画章节数',height=2)
         self.t_lable1.pack()
 
         self.f_top1 = Frame(master)

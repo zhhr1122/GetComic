@@ -26,7 +26,7 @@ def getNettruyenComicChapter(app,chapter_url):
     imgList = []
     try:
         response = requests.get(chapter_url)
-        name = app.var2.get()
+        index_url = app.var2.get()
         position = app.var3.get()
         soup = BeautifulSoup(response.text, "html.parser")
         chapter_title = soup.select('.breadcrumb')[0].find_all('span')[3].get_text().encode('UTF-8', 'ignore')
@@ -34,7 +34,7 @@ def getNettruyenComicChapter(app,chapter_url):
         for page in pages:
             # print page.img['src']
             imgList.append(page.img['src'].encode('UTF-8', 'ignore'))
-        comic_chapter = {'chap_url': chapter_url.encode('UTF-8', 'ignore'), 'chapter_title': chapter_title,'chap_imgs': imgList,'name':name,'position':position}
+        comic_chapter = {'chap_url': chapter_url.encode('UTF-8', 'ignore'), 'chapter_title': chapter_title,'chap_imgs': imgList,'name':index_url,'position':position}
         info_json = json.dumps(comic_chapter, sort_keys=True, indent=4, separators=(',', ': '), encoding="utf-8",
                                ensure_ascii=False)
         print info_json
