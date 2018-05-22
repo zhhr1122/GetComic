@@ -27,24 +27,26 @@ def SaveToChapterJson(app,title, datas):
 def postFiles(file):
     localurl = 'http://188.188.188.149:8080/mangago-bss/manga/addFile'
     test_url = 'http://222.129.17.186:18082/mangago-bss/manga/addFile'
+    url = 'http://mangago.in:8088/mangago-bss/manga/addFile'
     data = {
         'name': 'mangago'
     }
     files = {'file': open(file, 'rb')}
-    response = requests.post(test_url, data=data, files=files)
+    response = requests.post(url, data=data, files=files)
     return response
 
 def postChapterFiles(file):
     localurl = 'http://188.188.188.149:8080/mangago-bss/manga/addchapter'
     test_url = 'http://222.129.17.186:18082/mangago-bss/manga/addchapter'
+    url = 'http://mangago.in:8088/mangago-bss/manga/addchapter'
     data = {
         'name': 'mangago'
     }
     files = {'file': open(file, 'rb')}
-    response = requests.post(test_url, data=data, files=files)
+    response = requests.post(url, data=data, files=files)
     return response
 
-#print postFiles('C:/json/co-vo-nong-bong.json')
+#print postFiles('C:/json/tan-diet-vuong-gia-man-trieu.json')
 
 def isSaved(app,title):
     jsonfiles = 'c:/json/'+ title+'.json'

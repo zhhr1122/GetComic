@@ -111,7 +111,7 @@ def getNettruyenComicIndex(app,index_url):
         MangagoUtils.SaveToJson(app,file_name, info)
     except Exception as e:
         print('Error', e)
-        app.t_url.insert(1.0, 'is reloading' + "\n")
+        app.t_url.insert(1.0, e)
 
 
 
