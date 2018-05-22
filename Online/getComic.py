@@ -2,8 +2,6 @@
 #!/usr/bin/python
 
 import json
-from Tkinter import *
-
 import requests
 from bs4 import BeautifulSoup
 import MangagoUtils
