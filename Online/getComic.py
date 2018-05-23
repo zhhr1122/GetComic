@@ -5,6 +5,7 @@ import json
 import requests
 from bs4 import BeautifulSoup
 import MangagoUtils
+import logging
 
 
 addComicApi = 'manga/addFile'
@@ -18,22 +19,28 @@ def isNeedUpdate(data):
         soup = BeautifulSoup(response.text, "html.parser")
         chapters = soup.select('.chapter')
         if len(chapters) > count:
+            logging.info('id='+str(data['id'])+' 需要更新')
             print 'id='+str(data['id'])+' 需要更新'
             for i in range(0, len(chapters)-count):
                 chapter_url = chapters[len(chapters)-count-i-1].a['href']
                 chapter_title = chapters[len(chapters)-count-i-1].a.get_text().encode('UTF-8', 'ignore')
                 if isRaw(chapter_title):
+                    logging.info(chapter_title + '是原始漫画，不需要更新')
                     print chapter_title + '是原始漫画，不需要更新'
                 else:
                     getNettruyenComicChapter(index_url,chapter_url,count+i+1,data['id'])
+                    logging.info('id='+str(data['id'])+'更新章节'+ str(count+i+1) + '完成 标题为：' + chapter_title)
                     print 'id='+str(data['id'])+'更新章节'+ str(count+i+1) + '完成 标题为：' + chapter_title
         else:
+            logging.info('id='+str(data['id'])+'不需要更新')
             print 'id='+str(data['id'])+'不需要更新'
     except Exception as e:
+        logging.error(e.message)
         print('Error', e)
 
 def isRaw(chapter_title):
     raw = chapter_title.split(':')
+    logging.info(raw)
     print raw
     try:
         if cmp(raw[1],'Raw'):
@@ -61,6 +68,7 @@ def getNettruyenComicChapter(comic_url,chapter_url,position,id):
         file = MangagoUtils.SaveToChapterJson(str(id)+'_'+chapter_title, comic_chapter)
         MangagoUtils.postFiles(file,addChapterApi)
     except Exception as e:
+        logging.error(e.message)
         print('Error', e)
 
 
