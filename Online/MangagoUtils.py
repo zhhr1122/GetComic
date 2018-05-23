@@ -8,7 +8,7 @@ local_url = 'http://188.188.188.149:8080/mangago-bss/'
 test_url = 'http://222.129.17.186:18082/mangago-bss/'
 online_url = 'http://mangago.in:8088/mangago-bss/'
 
-url = test_url;
+url = online_url;
 
 def SaveToChapterJson(title, datas):
     fl = open('../../json/' + title + '.json', 'w')

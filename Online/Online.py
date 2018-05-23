@@ -13,7 +13,7 @@ import datetime
 def getComicList(localid):
     nowTime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # 现在
     print nowTime +'开始请求更新'
-    response = requests.get('http://222.129.17.186:18082/mangago-bss/manga/selectByLocaleId?localeId='+str(localid))
+    response = requests.get('http://mangago.in:8088/mangago-bss/manga/selectByLocaleId?localeId='+str(localid))
     json_response = response.content.decode()
     dict_json = json.loads(json_response)
     datas = dict_json['data']
