@@ -6,7 +6,7 @@ from Tkinter import *
 
 import getComic
 import MangagoUtils
-import getComicMangaindo
+import getComicKomikgue
 
 
 class App(object):
@@ -88,7 +88,7 @@ def start(app):
     print scource
     app.t_url.insert(1.0, 'the comic is from' + scource)
     if cmp(scource, 'www.komikgue.com') == 0:
-        download_thread = threading.Thread(target=getComicMangaindo.getMangaindoComicIndex, args=(app, index_url,))
+        download_thread = threading.Thread(target=getComicKomikgue.getKomikgueIndex, args=(app, index_url,))
         download_thread.start()
     else:
         app.t_url.insert(1.0, '无匹配规则')

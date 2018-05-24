@@ -8,7 +8,7 @@ import requests
 from bs4 import BeautifulSoup
 import MangagoUtils
 
-def getMangaindoComic(chapter_url):
+def getKomikgueComic(chapter_url):
     imgList = []
     try:
         response = requests.get(chapter_url)
@@ -26,7 +26,7 @@ def getMangaindoComic(chapter_url):
 
 
 
-def getMangaindoComicIndex(app,index_url):
+def getKomikgueIndex(app,index_url):
     Chapters_List = []
     Tag_List = []
     try:
@@ -37,14 +37,25 @@ def getMangaindoComicIndex(app,index_url):
         response = requests.get(index_url)
         soup = BeautifulSoup(response.text, "html.parser")
         title = soup.select('.widget-title')[0].get_text()
-        author = soup.select('.dl-horizontal')[0].select('dd')[4].get_text().strip()
-        tags = soup.select('.dl-horizontal')[0].select('dd')[7].select('a')
-        for tag in tags:
-            Tag_List.append(tag.get_text())
-        hot = soup.select('.dl-horizontal')[0].select('dd')[8].get_text()
-        status = cmp('Ongoing',soup.select('.dl-horizontal')[0].select('dd')[2].get_text().strip())
+        if len(soup.select('.dl-horizontal')[0].select('dd'))==10:
+            author = soup.select('.dl-horizontal')[0].select('dd')[4].get_text().strip()
+            tags = soup.select('.dl-horizontal')[0].select('dd')[7].select('a')
+            for tag in tags:
+                Tag_List.append(tag.get_text())
+            hot = soup.select('.dl-horizontal')[0].select('dd')[8].get_text()
+            status = cmp('Ongoing',soup.select('.dl-horizontal')[0].select('dd')[2].get_text().strip())
+        else:
+            author = soup.select('.dl-horizontal')[0].select('dd')[3].get_text().strip()
+            tags = soup.select('.dl-horizontal')[0].select('dd')[6].select('a')
+            for tag in tags:
+                Tag_List.append(tag.get_text())
+            hot = soup.select('.dl-horizontal')[0].select('dd')[7].get_text()
+            status = cmp('Ongoing', soup.select('.dl-horizontal')[0].select('dd')[2].get_text().strip())
         cover = soup.select('.img-responsive')[0]['src']
-        describe = soup.select('.col-lg-12')[0].p.get_text()
+        try:
+            describe = soup.select('.col-lg-12')[0].p.get_text()
+        except Exception as e:
+            describe = 'tidak ada deskripsi'
         chapters = soup.select('.chapter-title-rtl')
         app.t_url.insert(1.0, title + ' has ' + str(len(chapters)) + ' chapters\n')
         for i in range(0, len(chapters)):
@@ -53,7 +64,7 @@ def getMangaindoComicIndex(app,index_url):
             chapter_title = chapters[i].a.get_text()
             print "Chapter " + str(i + 1) + " is loaded"
             comic_chapter = {'chap_url': chapter_url.encode('UTF-8', 'ignore'), 'chapter_title': chapter_title,
-                             'chap_imgs': getMangaindoComic(chapter_url)}
+                             'chap_imgs': getKomikgueComic(chapter_url)}
             Chapters_List.append(comic_chapter)
         info = {'title': title, 'describe': describe, 'chapter': Chapters_List, 'author': author, 'cover': cover,'status': status, 'tag': Tag_List, "hot": hot.encode('UTF-8', 'ignore'),'url':index_url,'localId':30}
         info_json = json.dumps(info, sort_keys=True, indent=4, separators=(',', ': '), encoding="utf-8", ensure_ascii=False)
